@@ -1,0 +1,5 @@
+set sysroot C:\Users\Kevin\AppData\Local\Tizen\Sdk\platforms\tizen-4.0\wearable\rootstraps\wearable-4.0-device.core
+set debug-file-directory C:\Users\Kevin\AppData\Local\Tizen\Sdk\platforms\tizen-4.0\wearable\rootstraps\wearable-4.0-device.core\usr\lib\debug
+set solib-search-path C:\Users\Kevin\Desktop\Positive Computing\#Sample\Provider(Tizen)_Consumer(Android)\Provider\Debug
+dir C:\Users\Kevin\AppData\Local\Tizen\Sdk\platforms\tizen-4.0\wearable\rootstraps\wearable-4.0-device.core\usr\src\debug
+sharedlibrary
