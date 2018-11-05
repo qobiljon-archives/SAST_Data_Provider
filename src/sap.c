@@ -41,16 +41,16 @@ static void on_service_connection_terminated(sap_peer_agent_h peer_agent, sap_so
 }
 
 // TODO receives data from smartphone
+bool yes = true;
 static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id, unsigned int payload_length, void *buffer, void *user_data) {
 	// TODO print on a pop-up dialog
 	dlog_print(DLOG_INFO, TAG, "VAL %d", (int) *(unsigned char*) buffer);
 
-	short sample_interval = *((unsigned char*) buffer + 1) | ((*((unsigned char*) buffer + 2) << 8) & 0xff00);
-	short sample_duration = *((unsigned char*) buffer + 3) | ((*((unsigned char*) buffer + 4) << 8) & 0xff00);
+	short sample_interval = *((unsigned char*) buffer + 1) & 0xff | ((*((unsigned char*) buffer + 2) << 8) & 0xff00);
+	short sample_duration = *((unsigned char*) buffer + 3) & 0xff | ((*((unsigned char*) buffer + 4) << 8) & 0xff00);
 
 	switch (*(unsigned char*) buffer) {
 	case SENS_ACCELEROMETER:
-		update_ui("ACCELEROMETER REQUESTED");
 		if (sensor_listeners[SENS_ACCELEROMETER] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -61,7 +61,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GRAVITY:
-		update_ui("GRAVITY REQUESTED");
 		if (sensor_listeners[SENS_GRAVITY] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -72,7 +71,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_LINEAR_ACCELERATION:
-		update_ui("LINEAR_ACCELERATION REQUESTED");
 		if (sensor_listeners[SENS_LINEAR_ACCELERATION] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -83,7 +81,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_MAGNETIC:
-		update_ui("MAGNETIC REQUESTED");
 		if (sensor_listeners[SENS_MAGNETIC] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -94,7 +91,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_ROTATION_VECTOR:
-		update_ui("ROTATION_VECTOR REQUESTED");
 		if (sensor_listeners[SENS_ROTATION_VECTOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -105,7 +101,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_ORIENTATION:
-		update_ui("ORIENTATION REQUESTED");
 		if (sensor_listeners[SENS_ORIENTATION] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -116,7 +111,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GYROSCOPE:
-		update_ui("GYROSCOPE REQUESTED");
 		if (sensor_listeners[SENS_GYROSCOPE] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -127,7 +121,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_LIGHT:
-		update_ui("LIGHT REQUESTED");
 		if (sensor_listeners[SENS_LIGHT] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -138,7 +131,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_PROXIMITY:
-		update_ui("PROXIMITY REQUESTED");
 		if (sensor_listeners[SENS_PROXIMITY] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -149,7 +141,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_PRESSURE:
-		update_ui("PRESSURE REQUESTED");
 		if (sensor_listeners[SENS_PRESSURE] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -160,7 +151,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_ULTRAVIOLET:
-		update_ui("ULTRAVIOLET REQUESTED");
 		if (sensor_listeners[SENS_ULTRAVIOLET] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -171,7 +161,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_TEMPERATURE:
-		update_ui("TEMPERATURE REQUESTED");
 		if (sensor_listeners[SENS_TEMPERATURE] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -182,7 +171,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HUMIDITY:
-		update_ui("HUMIDITY REQUESTED");
 		if (sensor_listeners[SENS_HUMIDITY] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -193,7 +181,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HRM:
-		update_ui("HRM REQUESTED");
 		if (sensor_listeners[SENS_HRM] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -204,7 +191,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HRM_LED_GREEN:
-		update_ui("HRM_LED_GREEN REQUESTED");
 		if (sensor_listeners[SENS_HRM_LED_GREEN] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -215,7 +201,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HRM_LED_IR:
-		update_ui("HRM_LED_IR REQUESTED");
 		if (sensor_listeners[SENS_HRM_LED_IR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -226,7 +211,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HRM_LED_RED:
-		update_ui("HRM_LED_RED REQUESTED");
 		if (sensor_listeners[SENS_HRM_LED_RED] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -237,7 +221,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GYROSCOPE_UNCALIBRATED:
-		update_ui("GYROSCOPE_UNCALIBRATED REQUESTED");
 		if (sensor_listeners[SENS_GYROSCOPE_UNCALIBRATED] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -248,7 +231,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GEOMAGNETIC_UNCALIBRATED:
-		update_ui("GEOMAGNETIC_UNCALIBRATED REQUESTED");
 		if (sensor_listeners[SENS_GEOMAGNETIC_UNCALIBRATED] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -259,7 +241,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GYROSCOPE_ROTATION_VECTOR:
-		update_ui("GYROSCOPE_ROTATION_VECTOR REQUESTED");
 		if (sensor_listeners[SENS_GYROSCOPE_ROTATION_VECTOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -270,7 +251,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_GEOMAGNETIC_ROTATION_VECTOR:
-		update_ui("GEOMAGNETIC_ROTATION_VECTOR REQUESTED");
 		if (sensor_listeners[SENS_GEOMAGNETIC_ROTATION_VECTOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -281,7 +261,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_SIGNIFICANT_MOTION:
-		update_ui("SIGNIFICANT_MOTION REQUESTED");
 		if (sensor_listeners[SENS_SIGNIFICANT_MOTION] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -292,7 +271,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HUMAN_PEDOMETER:
-		update_ui("HUMAN_PEDOMETER REQUESTED");
 		if (sensor_listeners[SENS_HUMAN_PEDOMETER] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -303,7 +281,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HUMAN_SLEEP_MONITOR:
-		update_ui("HUMAN_SLEEP_MONITOR REQUESTED");
 		if (sensor_listeners[SENS_HUMAN_SLEEP_MONITOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -314,7 +291,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HUMAN_SLEEP_DETECTOR:
-		update_ui("HUMAN_SLEEP_DETECTOR REQUESTED");
 		if (sensor_listeners[SENS_HUMAN_SLEEP_DETECTOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -325,7 +301,6 @@ static void on_data_recieved(sap_socket_h socket, unsigned short int channel_id,
 		}
 		break;
 	case SENS_HUMAN_STRESS_MONITOR:
-		update_ui("HUMAN_STRESS_MONITOR REQUESTED");
 		if (sensor_listeners[SENS_HUMAN_STRESS_MONITOR] == NULL)
 			sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 1, (void*) &MSG_RES_FAIL);
 		else {
@@ -488,7 +463,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_ACCELEROMETER]++;
-		if (sample_counters[SENS_ACCELEROMETER] == SAMPLE_CNT_MAX[SENS_ACCELEROMETER])
+		if (sample_counters[SENS_ACCELEROMETER] >= SAMPLE_CNT_MAX[SENS_ACCELEROMETER])
 			sensor_listener_stop(sensor_listeners[SENS_ACCELEROMETER]);
 	}
 		break;
@@ -508,7 +483,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_GRAVITY]++;
-		if (sample_counters[SENS_GRAVITY] == SAMPLE_CNT_MAX[SENS_GRAVITY])
+		if (sample_counters[SENS_GRAVITY] >= SAMPLE_CNT_MAX[SENS_GRAVITY])
 			sensor_listener_stop(sensor_listeners[SENS_GRAVITY]);
 	}
 		break;
@@ -528,7 +503,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_LINEAR_ACCELERATION]++;
-		if (sample_counters[SENS_LINEAR_ACCELERATION] == SAMPLE_CNT_MAX[SENS_LINEAR_ACCELERATION])
+		if (sample_counters[SENS_LINEAR_ACCELERATION] >= SAMPLE_CNT_MAX[SENS_LINEAR_ACCELERATION])
 			sensor_listener_stop(sensor_listeners[SENS_LINEAR_ACCELERATION]);
 	}
 		break;
@@ -548,7 +523,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_MAGNETIC]++;
-		if (sample_counters[SENS_MAGNETIC] == SAMPLE_CNT_MAX[SENS_MAGNETIC])
+		if (sample_counters[SENS_MAGNETIC] >= SAMPLE_CNT_MAX[SENS_MAGNETIC])
 			sensor_listener_stop(sensor_listeners[SENS_MAGNETIC]);
 	}
 		break;
@@ -570,7 +545,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 30, buf);
 		sample_counters[SENS_ROTATION_VECTOR]++;
-		if (sample_counters[SENS_ROTATION_VECTOR] == SAMPLE_CNT_MAX[SENS_ROTATION_VECTOR])
+		if (sample_counters[SENS_ROTATION_VECTOR] >= SAMPLE_CNT_MAX[SENS_ROTATION_VECTOR])
 			sensor_listener_stop(sensor_listeners[SENS_ROTATION_VECTOR]);
 	}
 		break;
@@ -590,7 +565,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_ORIENTATION]++;
-		if (sample_counters[SENS_ORIENTATION] == SAMPLE_CNT_MAX[SENS_ORIENTATION])
+		if (sample_counters[SENS_ORIENTATION] >= SAMPLE_CNT_MAX[SENS_ORIENTATION])
 			sensor_listener_stop(sensor_listeners[SENS_ORIENTATION]);
 	}
 		break;
@@ -610,7 +585,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 26, buf);
 		sample_counters[SENS_GYROSCOPE]++;
-		if (sample_counters[SENS_GYROSCOPE] == SAMPLE_CNT_MAX[SENS_GYROSCOPE])
+		if (sample_counters[SENS_GYROSCOPE] >= SAMPLE_CNT_MAX[SENS_GYROSCOPE])
 			sensor_listener_stop(sensor_listeners[SENS_GYROSCOPE]);
 	}
 		break;
@@ -626,7 +601,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_LIGHT]++;
-		if (sample_counters[SENS_LIGHT] == SAMPLE_CNT_MAX[SENS_LIGHT])
+		if (sample_counters[SENS_LIGHT] >= SAMPLE_CNT_MAX[SENS_LIGHT])
 			sensor_listener_stop(sensor_listeners[SENS_LIGHT]);
 	}
 		break;
@@ -642,7 +617,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_PROXIMITY]++;
-		if (sample_counters[SENS_PROXIMITY] == SAMPLE_CNT_MAX[SENS_PROXIMITY])
+		if (sample_counters[SENS_PROXIMITY] >= SAMPLE_CNT_MAX[SENS_PROXIMITY])
 			sensor_listener_stop(sensor_listeners[SENS_PROXIMITY]);
 	}
 		break;
@@ -658,7 +633,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_PRESSURE]++;
-		if (sample_counters[SENS_PRESSURE] == SAMPLE_CNT_MAX[SENS_PRESSURE])
+		if (sample_counters[SENS_PRESSURE] >= SAMPLE_CNT_MAX[SENS_PRESSURE])
 			sensor_listener_stop(sensor_listeners[SENS_PRESSURE]);
 	}
 		break;
@@ -674,7 +649,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_ULTRAVIOLET]++;
-		if (sample_counters[SENS_ULTRAVIOLET] == SAMPLE_CNT_MAX[SENS_ULTRAVIOLET])
+		if (sample_counters[SENS_ULTRAVIOLET] >= SAMPLE_CNT_MAX[SENS_ULTRAVIOLET])
 			sensor_listener_stop(sensor_listeners[SENS_ULTRAVIOLET]);
 	}
 		break;
@@ -690,7 +665,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_TEMPERATURE]++;
-		if (sample_counters[SENS_TEMPERATURE] == SAMPLE_CNT_MAX[SENS_TEMPERATURE])
+		if (sample_counters[SENS_TEMPERATURE] >= SAMPLE_CNT_MAX[SENS_TEMPERATURE])
 			sensor_listener_stop(sensor_listeners[SENS_TEMPERATURE]);
 	}
 		break;
@@ -706,7 +681,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HUMIDITY]++;
-		if (sample_counters[SENS_HUMIDITY] == SAMPLE_CNT_MAX[SENS_HUMIDITY])
+		if (sample_counters[SENS_HUMIDITY] >= SAMPLE_CNT_MAX[SENS_HUMIDITY])
 			sensor_listener_stop(sensor_listeners[SENS_HUMIDITY]);
 	}
 		break;
@@ -722,7 +697,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HRM]++;
-		if (sample_counters[SENS_HRM] == SAMPLE_CNT_MAX[SENS_HRM])
+		if (sample_counters[SENS_HRM] >= SAMPLE_CNT_MAX[SENS_HRM])
 			sensor_listener_stop(sensor_listeners[SENS_HRM]);
 	}
 		break;
@@ -738,7 +713,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HRM_LED_GREEN]++;
-		if (sample_counters[SENS_HRM_LED_GREEN] == SAMPLE_CNT_MAX[SENS_HRM_LED_GREEN])
+		if (sample_counters[SENS_HRM_LED_GREEN] >= SAMPLE_CNT_MAX[SENS_HRM_LED_GREEN])
 			sensor_listener_stop(sensor_listeners[SENS_HRM_LED_GREEN]);
 	}
 		break;
@@ -754,7 +729,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HRM_LED_IR]++;
-		if (sample_counters[SENS_HRM_LED_IR] == SAMPLE_CNT_MAX[SENS_HRM_LED_IR])
+		if (sample_counters[SENS_HRM_LED_IR] >= SAMPLE_CNT_MAX[SENS_HRM_LED_IR])
 			sensor_listener_stop(sensor_listeners[SENS_HRM_LED_IR]);
 	}
 		break;
@@ -770,7 +745,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HRM_LED_RED]++;
-		if (sample_counters[SENS_HRM_LED_RED] == SAMPLE_CNT_MAX[SENS_HRM_LED_RED])
+		if (sample_counters[SENS_HRM_LED_RED] >= SAMPLE_CNT_MAX[SENS_HRM_LED_RED])
 			sensor_listener_stop(sensor_listeners[SENS_HRM_LED_RED]);
 	}
 		break;
@@ -796,7 +771,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 38, buf);
 		sample_counters[SENS_GYROSCOPE_UNCALIBRATED]++;
-		if (sample_counters[SENS_GYROSCOPE_UNCALIBRATED] == SAMPLE_CNT_MAX[SENS_GYROSCOPE_UNCALIBRATED])
+		if (sample_counters[SENS_GYROSCOPE_UNCALIBRATED] >= SAMPLE_CNT_MAX[SENS_GYROSCOPE_UNCALIBRATED])
 			sensor_listener_stop(sensor_listeners[SENS_GYROSCOPE_UNCALIBRATED]);
 	}
 		break;
@@ -822,7 +797,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 38, buf);
 		sample_counters[SENS_GEOMAGNETIC_UNCALIBRATED]++;
-		if (sample_counters[SENS_GEOMAGNETIC_UNCALIBRATED] == SAMPLE_CNT_MAX[SENS_GEOMAGNETIC_UNCALIBRATED])
+		if (sample_counters[SENS_GEOMAGNETIC_UNCALIBRATED] >= SAMPLE_CNT_MAX[SENS_GEOMAGNETIC_UNCALIBRATED])
 			sensor_listener_stop(sensor_listeners[SENS_GEOMAGNETIC_UNCALIBRATED]);
 	}
 		break;
@@ -844,7 +819,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 30, buf);
 		sample_counters[SENS_GYROSCOPE_ROTATION_VECTOR]++;
-		if (sample_counters[SENS_GYROSCOPE_ROTATION_VECTOR] == SAMPLE_CNT_MAX[SENS_GYROSCOPE_ROTATION_VECTOR])
+		if (sample_counters[SENS_GYROSCOPE_ROTATION_VECTOR] >= SAMPLE_CNT_MAX[SENS_GYROSCOPE_ROTATION_VECTOR])
 			sensor_listener_stop(sensor_listeners[SENS_GYROSCOPE_ROTATION_VECTOR]);
 	}
 		break;
@@ -866,7 +841,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 30, buf);
 		sample_counters[SENS_GEOMAGNETIC_ROTATION_VECTOR]++;
-		if (sample_counters[SENS_GEOMAGNETIC_ROTATION_VECTOR] == SAMPLE_CNT_MAX[SENS_GEOMAGNETIC_ROTATION_VECTOR])
+		if (sample_counters[SENS_GEOMAGNETIC_ROTATION_VECTOR] >= SAMPLE_CNT_MAX[SENS_GEOMAGNETIC_ROTATION_VECTOR])
 			sensor_listener_stop(sensor_listeners[SENS_GEOMAGNETIC_ROTATION_VECTOR]);
 	}
 		break;
@@ -882,7 +857,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_SIGNIFICANT_MOTION]++;
-		if (sample_counters[SENS_SIGNIFICANT_MOTION] == SAMPLE_CNT_MAX[SENS_SIGNIFICANT_MOTION])
+		if (sample_counters[SENS_SIGNIFICANT_MOTION] >= SAMPLE_CNT_MAX[SENS_SIGNIFICANT_MOTION])
 			sensor_listener_stop(sensor_listeners[SENS_SIGNIFICANT_MOTION]);
 	}
 		break;
@@ -912,7 +887,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 30, buf);
 		sample_counters[SENS_HUMAN_PEDOMETER]++;
-		if (sample_counters[SENS_HUMAN_PEDOMETER] == SAMPLE_CNT_MAX[SENS_HUMAN_PEDOMETER])
+		if (sample_counters[SENS_HUMAN_PEDOMETER] >= SAMPLE_CNT_MAX[SENS_HUMAN_PEDOMETER])
 			sensor_listener_stop(sensor_listeners[SENS_HUMAN_PEDOMETER]);
 	}
 		break;
@@ -928,7 +903,7 @@ void sensors_callback(sensor_h sensor, sensor_event_s *event, void *user_data) {
 
 		sap_socket_send_data(priv_data.socket, SAST_CHANNELID, 18, buf);
 		sample_counters[SENS_HUMAN_SLEEP_MONITOR]++;
-		if (sample_counters[SENS_HUMAN_SLEEP_MONITOR] == SAMPLE_CNT_MAX[SENS_HUMAN_SLEEP_MONITOR])
+		if (sample_counters[SENS_HUMAN_SLEEP_MONITOR] >= SAMPLE_CNT_MAX[SENS_HUMAN_SLEEP_MONITOR])
 			sensor_listener_stop(sensor_listeners[SENS_HUMAN_SLEEP_MONITOR]);
 	}
 		break;
